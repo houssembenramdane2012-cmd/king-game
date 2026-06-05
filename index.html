@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>King Game</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+
+        .mystyle {
+            background-color: #00ccff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-right: 20px;
+        }
+        .link:hover { color: #ff0000; }
+        .link {
+            color: #000000;
+            text-decoration: none;
+            padding: 5px 20px;
+        }
+        .button {
+            background-color: #ee3333;
+            color: aliceblue;
+            padding: 5px 15px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover { background-color: #fa6666; }
+
+        .stil {
+            background-color: #00ccff;
+            display: flex;
+            padding: 20px 50px;
+            border-radius: 0 0 50px 50px;
+        }
+        .text { width: 500px; }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .search-wrapper input {
+            border: none;
+            border-radius: 50px;
+            height: 30px;
+            padding: 0 15px;
+            width: 250px;
+            font-size: 13px;
+            outline: none;
+        }
+        .search-wrapper button {
+            background-color: #ee3333;
+            color: white;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            padding: 7px 18px;
+            font-size: 13px;
+        }
+        .search-wrapper button:hover { background-color: #fa6666; }
+
+        .suggestions {
+            position: absolute;
+            top: 38px;
+            left: 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            width: 250px;
+            z-index: 100;
+            overflow: hidden;
+            display: none;
+        }
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-item:hover { background-color: #f5f5f5; }
+        .suggestion-item img {
+            width: 35px;
+            height: 35px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .b { padding-left: 250px; }
+
+        .section-header {
+            padding: 30px 50px 10px 50px;
+        }
+        .section-header span { color: #555; }
+        .section-header h1 { margin: 5px 0; }
+        .view-all-btn {
+            border-radius: 50px;
+            background-color: #ee3333;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            cursor: pointer;
+        }
+
+        .no-results {
+            padding: 30px 50px;
+            font-size: 16px;
+            color: #888;
+            display: none;
+        }
+
+        .games-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 30px 50px;
+        }
+
+        .game-card {
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            width: 210px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .game-card img.cover {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+        .card-body { padding: 12px; }
+        .card-label {
+            font-size: 11px;
+            color: #888;
+            margin: 0 0 4px 0;
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin: 0 0 8px 0;
+            color: #111;
+        }
+        .card-desc {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.5;
+            margin: 0 0 12px 0;
+        }
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+        .card-footer a {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+        .download-label {
+            font-size: 12px;
+            color: #ee3333;
+            font-weight: bold;
+        }
+        .download-icon {
+            width: 40px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .download-icon:hover { transform: scale(1.2); }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="mystyle">
+        <img src="imges/download.png" width="150" alt="logo" />
+        <div>
+            <a href="https://www.google.com" class="link">home</a>
+            <a href="" class="link">our shop</a>
+            <a target="_blank" href="https://www.instagram.com/houssem.___.ben/?hl=ar" class="link">contact</a>
+            <button class="button">sign in</button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="stil">
+        <div>
+            <div class="text">
+                <span>welcome to king game site web</span>
+                <h1>best gaming site ever!</h1>
+                <p>"king game" It's a free game download site where you can download games and play alone or with your friends... a fun experience!</p>
+            </div>
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="ابحث عن لعبة..." autocomplete="off" />
+                <button onclick="doSearch()">SEARCH</button>
+                <div class="suggestions" id="suggestions"></div>
+            </div>
+        </div>
+        <div class="b">
+            <img src="imges/Assassin's_Creed_Bloodlines.jpg" width="220" alt="Assassin's Creed">
+        </div>
+    </div>
+
+    <!-- Section Header -->
+    <div class="section-header">
+        <span>trending</span>
+        <h1>trending games</h1>
+        <button class="view-all-btn" onclick="showAll()">view all</button>
+    </div>
+
+    <p class="no-results" id="noResults">❌ لا توجد نتائج لـ "<span id="searchedWord"></span>"</p>
+
+    <!-- Games Grid -->
+    <div class="games-grid" id="gamesGrid">
+
+        <div class="game-card" data-name="hollow knight هولو نايت حشرات مغامرة قتال">
+            <img class="cover" src="imges/download..jpg" alt="Hollow Knight" />
+            <div class="card-body">
+                <p class="card-label">story</p>
+                <p class="card-title">Hollow Knight</p>
+                <p class="card-desc">مغامرة ملحمية في عالم حشرات تحت الأرض، استكشف دنجونات مظلمة وقاتل أعداء لا يرحمون.</p>
+                <div class="card-footer">
+                    <!-- تم تعديل الرابط هنا برابط جوجل درايف للعبة هولو نايت العادية -->
+                    <a href="https://drive.google.com/file/d/10RuvkW8YX0v_2esTJSlRi4AGlpokygul/view?usp=sharing" target="_blank">
+                        <span class="download-label">download</span>
+                        <img class="download-icon" src="imges/download (1).png" alt="download" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-card" data-name="hollow knight silksong هولو نايت سيلك سونج هورنيت جزء ثاني">
+            <img class="cover" src="imges/download (1).jpg" alt="Hollow Knight Silksong" />
+            <div class="card-body">
+                <p class="card-label">story</p>
+                <p class="card-title">Hollow Knight: Silksong</p>
+                <p class="card-desc">الجزء الثاني من hollow knight، العب بشخصية Hornet في رحلة مليئة بالتحديات والأسرار.</p>
+                <div class="card-footer">
+                    <!-- رابط جوجل درايف للعبة سيلك سونج المضاف مسبقاً -->
+                    <a href="https://drive.google.com/file/d/1AR0x9uPaJjGh6eOcmt9TZqvqpn7HSGRv/view?usp=sharing" target="_blank">
+                        <span class="download-label">download</span>
+                        <img class="download-icon" src="imges/download (1).png" alt="download" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-card" data-name="grand theft auto v gta v جي تي اي قراند سرقة السيارات الكبرى عالم مفتوح">
+            <img class="cover" src="imges/download (2)..jpg" alt="Grand Theft Auto V" />
+            <div class="card-body">
+                <p class="card-label">story</p>
+                <p class="card-title">Grand Theft Auto V</p>
+                <p class="card-desc">العب في مدينة Los Santos الضخمة، نفّذ مهمات إجرامية أو استكشف العالم المفتوح بحرية تامة.</p>
+                <div class="card-footer">
+                    <a href="https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/" target="_blank">
+                        <span class="download-label">download</span>
+                        <img class="download-icon" src="imges/download (1).png" alt="download" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-card" data-name="red dead redemption 2 rdr2 ريد ديد ريدمبشن رعاة البقر الغرب الامريكي">
+            <img class="cover" src="imges/download (3)..jpg" alt="Red Dead Redemption 2" />
+            <div class="card-body">
+                <p class="card-label">story</p>
+                <p class="card-title">Red Dead Redemption 2</p>
+                <p class="card-desc">قصة رعاة البقر الأسطورية، عش حياة الغرب الأمريكي في عالم مفتوح خلاب بتفاصيل لا تصدق.</p>
+                <div class="card-footer">
+                    <a href="https://store.steampowered.com/app/1174180/Red_Dead_Redemption_2/" target="_blank">
+                        <span class="download-label">download</span>
+                        <img class="download-icon" src="imges/download (1).png" alt="download" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('suggestions');
+        const gamesGrid = document.getElementById('gamesGrid');
+        const noResults = document.getElementById('noResults');
+        const cards = document.querySelectorAll('.game-card');
+
+        const games = [
+            { name: 'Hollow Knight',          keywords: 'hollow knight هولو نايت حشرات مغامرة قتال',                  img: 'imges/download..jpg' },
+            { name: 'Hollow Knight: Silksong',  keywords: 'hollow knight silksong هولو نايت سيلك سونج هورنيت جزء ثاني',         img: 'imges/download (1).jpg' },
+            { name: 'Grand Theft Auto V',       keywords: 'grand theft auto v gta v جي تي اي قراند سرقة السيارات الكبرى عالم مفتوح',         img: 'imges/download (2)..jpg' },
+            { name: 'Red Dead Redemption 2',    keywords: 'red dead redemption 2 rdr2 ريد ديد ريدمبشن رعاة البقر الغرب الامريكي',     img: 'imges/download (3)..jpg' },
+        ];
+
+        searchInput.addEventListener('input', () => {
+            const val = searchInput.value.trim().toLowerCase();
+            suggestionsBox.innerHTML = '';
+
+            if (val === '') {
+                suggestionsBox.style.display = 'none';
+                showAll();
+                return;
+            }
+
+            const matched = games.filter(g => g.keywords.includes(val));
+
+            if (matched.length > 0) {
+                matched.forEach(g => {
+                    const item = document.createElement('div');
+                    item.className = 'suggestion-item';
+                    item.innerHTML = `<img src="${g.img}" alt="${g.name}"><span>${g.name}</span>`;
+                    item.addEventListener('click', () => {
+                        searchInput.value = g.name;
+                        suggestionsBox.style.display = 'none';
+                        filterCards(g.name.toLowerCase());
+                    });
+                    suggestionsBox.appendChild(item);
+                });
+                suggestionsBox.style.display = 'block';
+            } else {
+                suggestionsBox.style.display = 'none';
+            }
+
+            filterCards(val);
+        });
+
+        function doSearch() {
+            const val = searchInput.value.trim().toLowerCase();
+            suggestionsBox.style.display = 'none';
+            if (val === '') { showAll(); return; }
+            filterCards(val);
+        }
+
+        function filterCards(val) {
+            let found = 0;
+            cards.forEach(card => {
+                const keywords = card.getAttribute('data-name').toLowerCase();
+                if (keywords.includes(val)) {
+                    card.style.display = 'block';
+                    found++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            if (found === 0) {
+                document.getElementById('searchedWord').textContent = searchInput.value;
+                noResults.style.display = 'block';
+                gamesGrid.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                gamesGrid.style.display = 'flex';
+            }
+        }
+
+        function showAll() {
+            cards.forEach(card => card.style.display = 'block');
+            noResults.style.display = 'none';
+            gamesGrid.style.display = 'flex';
+            searchInput.value = '';
+            suggestionsBox.style.display = 'none';
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-wrapper')) {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') doSearch();
+        });
+    </script>
+
+</body>
+</html>

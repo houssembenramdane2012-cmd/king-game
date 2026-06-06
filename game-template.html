@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">King Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0a0c14;--bg2:#111422;--bg3:#181c2e;--card:#161a28;
+--border:#ffffff12;--border2:#ffffff22;
+--accent:#e63946;--accent2:#ff6b6b;--gold:#f4a261;
+--text:#f0f0f5;--muted:#8890aa;--radius:16px;--radius-sm:10px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,12,20,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(16px,4vw,50px);height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.nav-logo{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#fff;letter-spacing:2px;text-decoration:none;}
+.nav-logo span{color:var(--accent)}
+.back-btn{display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;padding:8px 14px;border-radius:var(--radius-sm);border:1px solid var(--border2);transition:color .2s,border-color .2s;}
+.back-btn:hover{color:#fff;border-color:var(--accent)}
+.back-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* HERO */
+.game-hero{position:relative;overflow:hidden;padding:clamp(30px,6vw,70px) clamp(16px,4vw,50px);display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;}
+.game-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#0a0c14 0%,#1a0a1a 60%,#0a0c14 100%);z-index:0;}
+.glow{position:absolute;top:-100px;right:-50px;width:600px;height:600px;background:radial-gradient(circle,rgba(230,57,70,.12) 0%,transparent 65%);pointer-events:none;z-index:0;}
+
+.game-cover-wrap{position:relative;z-index:1;flex:0 0 auto;}
+.game-cover{width:clamp(180px,22vw,240px);border-radius:var(--radius);box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 40px rgba(230,57,70,.15);display:block;aspect-ratio:3/4;object-fit:cover;}
+
+.game-info{flex:1;min-width:260px;position:relative;z-index:1;}
+.game-genre{display:inline-block;background:rgba(230,57,70,.15);border:1px solid rgba(230,57,70,.3);color:var(--accent2);font-size:11px;font-weight:700;padding:4px 14px;border-radius:50px;letter-spacing:1px;margin-bottom:14px;}
+.game-title{font-family:'Rajdhani',sans-serif;font-size:clamp(32px,6vw,60px);font-weight:700;color:#fff;line-height:1.05;margin-bottom:12px;}
+.game-rating{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.stars{color:var(--gold);font-size:20px;letter-spacing:2px;}
+.rating-num{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff;}
+.rating-total{color:var(--muted);font-size:14px;}
+.game-desc{color:var(--muted);font-size:15px;line-height:1.8;max-width:580px;margin-bottom:24px;}
+
+.meta-grid{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px;}
+.meta-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;}
+.meta-label{font-size:10px;color:var(--muted);letter-spacing:1px;font-weight:700;text-transform:uppercase;margin-bottom:3px;}
+.meta-val{font-size:14px;font-weight:600;color:#fff;}
+
+.dl-btn-big{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;text-decoration:none;padding:14px 32px;border-radius:50px;font-size:15px;font-weight:700;font-family:'Cairo',sans-serif;transition:background .2s,transform .15s;box-shadow:0 8px 24px rgba(230,57,70,.3);}
+.dl-btn-big:hover{background:var(--accent2);transform:scale(1.04)}
+.dl-btn-big svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* REQUIREMENTS */
+.section{padding:40px clamp(16px,4vw,50px)}
+.sec-label{font-size:11px;color:var(--accent);letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-bottom:6px;}
+.sec-title{font-family:'Rajdhani',sans-serif;font-size:clamp(20px,3vw,28px);font-weight:700;color:#fff;margin-bottom:24px;}
+
+.req-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.req-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;}
+.req-card h4{font-size:12px;color:var(--accent2);font-weight:700;letter-spacing:1px;margin-bottom:14px;text-transform:uppercase;}
+.req-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border);gap:12px;}
+.req-row:last-child{border-bottom:none}
+.req-key{font-size:12px;color:var(--muted);flex:0 0 80px;}
+.req-val{font-size:12px;color:var(--text);text-align:right;flex:1;}
+
+/* TRAILER */
+.trailer-wrap{position:relative;width:100%;padding-top:56.25%;border-radius:var(--radius);overflow:hidden;background:#000;}
+.trailer-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+
+/* SCREENSHOTS */
+.screens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.screens-grid img{width:100%;border-radius:var(--radius-sm);aspect-ratio:16/9;object-fit:cover;border:1px solid var(--border);transition:transform .2s,box-shadow .2s;cursor:pointer;}
+.screens-grid img:hover{transform:scale(1.03);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+
+/* COMMENTS */
+.comments-section{padding:40px clamp(16px,4vw,50px);border-top:1px solid var(--border);}
+.comment-form{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:28px;}
+.comment-form input,.comment-form textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);color:#fff;padding:12px 16px;border-radius:var(--radius-sm);font-family:'Cairo',sans-serif;font-size:14px;outline:none;transition:border .2s;margin-bottom:10px;}
+.comment-form input::placeholder,.comment-form textarea::placeholder{color:var(--muted)}
+.comment-form input:focus,.comment-form textarea:focus{border-color:var(--accent)}
+.comment-form textarea{resize:vertical;min-height:90px;}
+.submit-btn{background:var(--accent);color:#fff;border:none;padding:10px 24px;border-radius:50px;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:background .2s,transform .15s;}
+.submit-btn:hover{background:var(--accent2);transform:scale(1.04)}
+
+.comment-list{display:flex;flex-direction:column;gap:14px;}
+.comment{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;}
+.comment-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;flex:0 0 auto;}
+.comment-name{font-weight:700;font-size:14px;color:#fff;}
+.comment-date{font-size:11px;color:var(--muted);margin-left:auto;}
+.comment-text{font-size:13px;color:var(--muted);line-height:1.7;}
+.comment-stars{color:var(--gold);font-size:13px;margin-bottom:6px;}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px clamp(16px,4vw,50px);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted);}
+footer a{color:var(--muted);text-decoration:none;}
+footer a:hover{color:var(--accent2)}
+
+@media(max-width:600px){
+  .game-cover{width:140px;}
+  .meta-grid{gap:8px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="king_game.html" class="nav-logo">KING<span>GAME</span></a>
+  <a href="king_game.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    رجوع
+  </a>
+</nav>
+
+<!-- content injected by JS -->
+<div id="app"></div>
+
+<footer>
+  <span>© 2025 KingGame — جميع الحقوق محفوظة</span>
+  <a href="https://www.instagram.com/houssem.___.ben/?hl=ar" target="_blank">Instagram</a>
+</footer>
+
+<script>
+const GAMES = {
+  "hollow-knight": {
+    title: "Hollow Knight",
+    genre: "STORY / ACTION",
+    rating: 9.2,
+    cover: "imges/download..jpg",
+    desc: "مغامرة ملحمية في عالم حشرات تحت الأرض. استكشف دنجونات مظلمة شاسعة، قاتل مئات من الأعداء المختلفة، واكتشف أسرار مملكة هولونيست المنسية. لعبة من نوع Metroidvania بتصميم يدوي رائع وموسيقى تصويرية خلابة.",
+    downloadUrl: "https://drive.google.com/file/d/10RuvkW8YX0v_2esTJSlRi4AGlpokygul/view?usp=sharing",
+    trailer: "https://www.youtube.com/embed/UAO2urG23S4",
+    year: "2017", developer: "Team Cherry", platform: "PC / Switch / PS4", size: "9 GB",
+    req: {
+      min: [["OS","Windows 7"],["CPU","Intel Core 2 Duo"],["RAM","4 GB"],["GPU","GeForce 400"],["Storage","9 GB"]],
+      rec: [["OS","Windows 10"],["CPU","Intel Core i5"],["RAM","8 GB"],["GPU","GeForce GTX 960"],["Storage","9 GB"]]
+    },
+    comments: [
+      {name:"Ahmed",text:"من أجمل الألعاب التي لعبتها في حياتي!",stars:5,date:"2025-01-10"},
+      {name:"Sara",text:"الموسيقى والأجواء رائعة جداً، أنصح بها بشدة.",stars:5,date:"2025-02-03"}
+    ]
+  },
+  "silksong": {
+    title: "Hollow Knight: Silksong",
+    genre: "STORY / ACTION",
+    rating: 9.5,
+    cover: "imges/download (1).jpg",
+    desc: "الجزء الثاني من سلسلة Hollow Knight. العب بشخصية Hornet في مملكة جديدة مليئة بالأعداء والأسرار. أسلوب لعب أسرع وأكثر ديناميكية مع عالم ضخم جديد كلياً.",
+    downloadUrl: "https://drive.google.com/file/d/1AR0x9uPaJjGh6eOcmt9TZqvqpn7HSGRv/view?usp=sharing",
+    trailer: "https://www.youtube.com/embed/pFBtfMDwxfA",
+    year: "2024", developer: "Team Cherry", platform: "PC / Switch / PS4", size: "12 GB",
+    req: {
+      min: [["OS","Windows 10"],["CPU","Intel Core i3"],["RAM","4 GB"],["GPU","GeForce GTX 750"],["Storage","12 GB"]],
+      rec: [["OS","Windows 10"],["CPU","Intel Core i5"],["RAM","8 GB"],["GPU","GeForce GTX 1060"],["Storage","12 GB"]]
+    },
+    comments: [
+      {name:"Khalid",text:"انتظرتها طويلاً ولم تخيب الظن!",stars:5,date:"2025-03-15"}
+    ]
+  },
+  "gta5": {
+    title: "Grand Theft Auto V",
+    genre: "OPEN WORLD",
+    rating: 9.7,
+    cover: "imges/download (2)..jpg",
+    desc: "استكشف مدينة Los Santos الضخمة في أحد أكبر ألعاب العالم المفتوح على الإطلاق. نفّذ مهمات إجرامية، سرق سيارات، أو فقط استمتع بالحرية الكاملة في عالم حي ومتنفس.",
+    downloadUrl: "https://megaup.net/folder/ceed57d96d4f147cfabbfa725f44b69e/GTA_V_Enhanced",
+    trailer: "https://www.youtube.com/embed/QkkoHAzjnUs",
+    year: "2013", developer: "Rockstar Games", platform: "PC / PS5 / Xbox", size: "95 GB",
+    req: {
+      min: [["OS","Windows 10"],["CPU","Intel Core i5-3470"],["RAM","8 GB"],["GPU","NVIDIA GTX 1060"],["Storage","95 GB"]],
+      rec: [["OS","Windows 10/11"],["CPU","Intel Core i7-6700K"],["RAM","16 GB"],["GPU","NVIDIA RTX 2060"],["Storage","95 GB"]]
+    },
+    comments: [
+      {name:"Omar",text:"لعبة كلاسيكية لا تشيخ أبداً!",stars:5,date:"2025-01-22"},
+      {name:"Youssef",text:"الأونلاين لوحده يستحق كل شيء.",stars:4,date:"2025-02-14"}
+    ]
+  },
+  "rdr2": {
+    title: "Red Dead Redemption 2",
+    genre: "OPEN WORLD",
+    rating: 9.8,
+    cover: "imges/download (3)..jpg",
+    desc: "قصة رعاة البقر الأسطورية. عش حياة Arthur Morgan في الغرب الأمريكي عام 1899 في أكثر تجربة واقعية وعاطفية في تاريخ الألعاب.",
+    downloadUrl: "https://store.steampowered.com/app/1174180/Red_Dead_Redemption_2/",
+    trailer: "https://www.youtube.com/embed/gmA6MrX81z4",
+    year: "2019", developer: "Rockstar Games", platform: "PC / PS4 / Xbox", size: "120 GB",
+    req: {
+      min: [["OS","Windows 10"],["CPU","Intel Core i7-4770K"],["RAM","12 GB"],["GPU","NVIDIA GTX 1060 6GB"],["Storage","120 GB"]],
+      rec: [["OS","Windows 10/11"],["CPU","Intel Core i7-8700K"],["RAM","16 GB"],["GPU","NVIDIA RTX 2070"],["Storage","120 GB"]]
+    },
+    comments: [
+      {name:"Nour",text:"أفضل قصة في تاريخ الألعاب بلا منازع.",stars:5,date:"2025-01-05"},
+      {name:"Tarek",text:"العالم المفتوح فيها يفوق الخيال.",stars:5,date:"2025-03-01"}
+    ]
+  },
+  "cuphead": {
+    title: "Cuphead",
+    genre: "ACTION / INDIE",
+    rating: 9.0,
+    cover: "imges/download.jpg",
+    desc: "لعبة أكشن من نوع run-and-gun بأسلوب رسوم متحركة كلاسيكية من الثلاثينيات. تحديات صعبة جداً ورسومات يدوية مذهلة تجعلها تحفة فنية.",
+    downloadUrl: "https://pixeldrain.com/u/CeLtZgdH",
+    trailer: "https://www.youtube.com/embed/NN-9SQXoi50",
+    year: "2017", developer: "Studio MDHR", platform: "PC / Switch / PS4", size: "3 GB",
+    req: {
+      min: [["OS","Windows 7"],["CPU","Intel Core i3"],["RAM","4 GB"],["GPU","GeForce GTX 550"],["Storage","3 GB"]],
+      rec: [["OS","Windows 10"],["CPU","Intel Core i5"],["RAM","8 GB"],["GPU","GeForce GTX 750"],["Storage","3 GB"]]
+    },
+    comments: [
+      {name:"Ali",text:"الرسومات خيالية والصعوبة مجنونة، أحبها!",stars:5,date:"2025-02-20"}
+    ]
+  },
+  "gta4": {
+    title: "Grand Theft Auto IV",
+    genre: "OPEN WORLD",
+    rating: 9.3,
+    cover: "imges/download2.jpg",
+    desc: "قصة Niko Bellic المهاجر في Liberty City الضخمة. من أعمق قصص سلسلة GTA وأكثرها واقعية، بأسلوب لعب مفتوح مميز.",
+    downloadUrl: "https://www.4fnet.org/gtaiv4ce/",
+    trailer: "https://www.youtube.com/embed/iNsNG0WKYMQ",
+    year: "2008", developer: "Rockstar Games", platform: "PC / PS3 / Xbox 360", size: "22 GB",
+    req: {
+      min: [["OS","Windows 10"],["CPU","Intel Core 2 Quad"],["RAM","4 GB"],["GPU","NVIDIA 8600GT"],["Storage","22 GB"]],
+      rec: [["OS","Windows 10"],["CPU","Intel Core i5"],["RAM","8 GB"],["GPU","NVIDIA GTX 760"],["Storage","22 GB"]]
+    },
+    comments: [
+      {name:"Rami",text:"الجزء الأعمق في السلسلة، قصة رائعة.",stars:5,date:"2025-01-30"}
+    ]
+  },
+  "san-andreas": {
+    title: "GTA: San Andreas",
+    genre: "OPEN WORLD",
+    rating: 9.6,
+    cover: "imges/download3.jpg",
+    desc: "الكلاسيكية الخالدة. عش قصة CJ في San Andreas الضخمة مع حرية مطلقة، مهمات لا تنتهي، وعالم مفتوح كان ثورياً في وقته.",
+    downloadUrl: "https://pixeldrain.com/u/RrSG5qtv",
+    trailer: "https://www.youtube.com/embed/CIZIN4nT18w",
+    year: "2004", developer: "Rockstar Games", platform: "PC / PS2 / Xbox", size: "4.7 GB",
+    req: {
+      min: [["OS","Windows 7"],["CPU","Intel Pentium 4"],["RAM","2 GB"],["GPU","256MB GPU"],["Storage","4.7 GB"]],
+      rec: [["OS","Windows 10"],["CPU","Intel Core i3"],["RAM","4 GB"],["GPU","GeForce GTX 550"],["Storage","4.7 GB"]]
+    },
+    comments: [
+      {name:"Hassan",text:"ذكريات الطفولة، لعبة لا تُنسى.",stars:5,date:"2025-02-08"}
+    ]
+  },
+  "farcry3": {
+    title: "Far Cry 3",
+    genre: "FPS / OPEN WORLD",
+    rating: 9.1,
+    cover: "imges/images.jpg",
+    desc: "استيقظ على جزيرة استوائية يسيطر عليها مجانين وقراصنة. قصة مثيرة مع شرير لا يُنسى هو Vaas، وعالم مفتوح جميل ومليء بالأكشن.",
+    downloadUrl: "https://store.steampowered.com/app/220240/Far_Cry_3/",
+    trailer: "https://www.youtube.com/embed/GDkGMFJbNqk",
+    year: "2012", developer: "Ubisoft", platform: "PC / PS3 / Xbox 360", size: "15 GB",
+    req: {
+      min: [["OS","Windows 7"],["CPU","Intel Core 2 Quad"],["RAM","4 GB"],["GPU","NVIDIA GTX 460"],["Storage","15 GB"]],
+      rec: [["OS","Windows 10"],["CPU","Intel Core i5"],["RAM","8 GB"],["GPU","NVIDIA GTX 680"],["Storage","15 GB"]]
+    },
+    comments: [
+      {name:"Lina",text:"Vaas أفضل شرير في تاريخ الألعاب!",stars:5,date:"2025-03-10"}
+    ]
+  }
+};
+
+function getParam(){return new URLSearchParams(location.search).get('g')||'hollow-knight'}
+
+function stars(n){
+  const full=Math.floor(n/2);
+  const half=n%2>=1?1:0;
+  return '★'.repeat(full)+(half?'½':'')+'☆'.repeat(5-full-half);
+}
+
+function renderStars(n){let s='';for(let i=1;i<=5;i++)s+=`<span style="color:${i<=Math.round(n/2)?'var(--gold)':'var(--border2)'};font-size:18px">★</span>`;return s;}
+
+function saveComments(key,arr){try{localStorage.setItem('comments_'+key,JSON.stringify(arr))}catch(e){}}
+function loadComments(key,defaults){try{const s=localStorage.getItem('comments_'+key);return s?JSON.parse(s):defaults}catch(e){return defaults}}
+
+function render(){
+  const key=getParam();
+  const g=GAMES[key];
+  if(!g){document.getElementById('app').innerHTML='<p style="padding:60px;color:var(--muted);text-align:center">اللعبة غير موجودة</p>';return;}
+  document.title=g.title+' — King Game';
+  const comments=loadComments(key,g.comments);
+
+  const reqRows=(arr)=>arr.map(([k,v])=>`<div class="req-row"><span class="req-key">${k}</span><span class="req-val">${v}</span></div>`).join('');
+  const commentsHtml=comments.map(c=>`
+    <div class="comment">
+      <div class="comment-header">
+        <div class="avatar">${c.name[0].toUpperCase()}</div>
+        <span class="comment-name">${c.name}</span>
+        <span class="comment-date">${c.date}</span>
+      </div>
+      <div class="comment-stars">${'★'.repeat(c.stars||5)}</div>
+      <div class="comment-text">${c.text}</div>
+    </div>`).join('');
+
+  document.getElementById('app').innerHTML=`
+    <section class="game-hero">
+      <div class="glow"></div>
+      <div class="game-cover-wrap">
+        <img class="game-cover" src="${g.cover}" alt="${g.title}" onerror="this.src='https://placehold.co/240x320/161a28/e63946?text=${encodeURIComponent(g.title)}'">
+      </div>
+      <div class="game-info">
+        <span class="game-genre">${g.genre}</span>
+        <h1 class="game-title">${g.title}</h1>
+        <div class="game-rating">
+          <span class="stars">${renderStars(g.rating)}</span>
+          <span class="rating-num">${g.rating}</span>
+          <span class="rating-total">/ 10</span>
+        </div>
+        <p class="game-desc">${g.desc}</p>
+        <div class="meta-grid">
+          <div class="meta-item"><div class="meta-label">السنة</div><div class="meta-val">${g.year}</div></div>
+          <div class="meta-item"><div class="meta-label">المطور</div><div class="meta-val">${g.developer}</div></div>
+          <div class="meta-item"><div class="meta-label">المنصة</div><div class="meta-val">${g.platform}</div></div>
+          <div class="meta-item"><div class="meta-label">الحجم</div><div class="meta-val">${g.size}</div></div>
+        </div>
+        <a class="dl-btn-big" href="${g.downloadUrl}" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          تحميل اللعبة
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="sec-label">watch</div>
+      <div class="sec-title">التريلر الرسمي</div>
+      <div class="trailer-wrap">
+        <iframe src="${g.trailer}" title="Trailer" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <section class="section" style="border-top:1px solid var(--border)">
+      <div class="sec-label">system requirements</div>
+      <div class="sec-title">متطلبات التشغيل</div>
+      <div class="req-grid">
+        <div class="req-card"><h4>الحد الأدنى</h4>${reqRows(g.req.min)}</div>
+        <div class="req-card"><h4>الموصى به</h4>${reqRows(g.req.rec)}</div>
+      </div>
+    </section>
+
+    <section class="comments-section">
+      <div class="sec-label">community</div>
+      <div class="sec-title">التعليقات</div>
+      <div class="comment-form">
+        <input type="text" id="cName" placeholder="اسمك">
+        <textarea id="cText" placeholder="اكتب تعليقك هنا..."></textarea>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div id="starPicker" style="display:flex;gap:4px;cursor:pointer;font-size:24px;" data-val="5">
+            ${[1,2,3,4,5].map(i=>`<span data-s="${i}" style="color:var(--gold)">★</span>`).join('')}
+          </div>
+          <button class="submit-btn" onclick="addComment('${key}')">إرسال التعليق</button>
+        </div>
+      </div>
+      <div class="comment-list" id="commentList">${commentsHtml}</div>
+    </section>
+  `;
+
+  // star picker
+  const picker=document.getElementById('starPicker');
+  picker.querySelectorAll('span').forEach(s=>{
+    s.addEventListener('mouseover',()=>{
+      const v=+s.dataset.s;
+      picker.querySelectorAll('span').forEach(x=>x.style.color=+x.dataset.s<=v?'var(--gold)':'var(--border2)');
+    });
+    s.addEventListener('click',()=>{picker.dataset.val=s.dataset.s;});
+    s.addEventListener('mouseleave',()=>{
+      const v=+picker.dataset.val;
+      picker.querySelectorAll('span').forEach(x=>x.style.color=+x.dataset.s<=v?'var(--gold)':'var(--border2)');
+    });
+  });
+}
+
+function addComment(key){
+  const name=document.getElementById('cName').value.trim();
+  const text=document.getElementById('cText').value.trim();
+  const stars=+document.getElementById('starPicker').dataset.val||5;
+  if(!name||!text){alert('من فضلك أدخل الاسم والتعليق');return;}
+  const g=GAMES[key];
+  const comments=loadComments(key,g.comments);
+  const today=new Date().toISOString().slice(0,10);
+  comments.unshift({name,text,stars,date:today});
+  saveComments(key,comments);
+  document.getElementById('cName').value='';
+  document.getElementById('cText').value='';
+  const newHtml=comments.map(c=>`
+    <div class="comment">
+      <div class="comment-header">
+        <div class="avatar">${c.name[0].toUpperCase()}</div>
+        <span class="comment-name">${c.name}</span>
+        <span class="comment-date">${c.date}</span>
+      </div>
+      <div class="comment-stars">${'★'.repeat(c.stars||5)}</div>
+      <div class="comment-text">${c.text}</div>
+    </div>`).join('');
+  document.getElementById('commentList').innerHTML=newHtml;
+}
+
+render();
+</script>
+</body>
+</html>
